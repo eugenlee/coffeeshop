@@ -18,7 +18,7 @@ uncomment the following line to initialize the datbase
 '''
 # db_drop_and_create_all()
 
-## ROUTES
+# ROUTES
 '''
 implement endpoint
     GET /drinks
@@ -38,6 +38,7 @@ def get_drinks():
         "success": True,
         "drinks": [drink.short() for drink in drinks]
     })
+
 
 '''
 implement endpoint
@@ -60,6 +61,7 @@ def get_drinks_detail(jwt):
         "drinks": [drink.long() for drink in drinks]
     })
 
+
 '''
 implement endpoint
     POST /drinks
@@ -75,7 +77,7 @@ def post_drinks(jwt):
     body = request.get_json()
     if not ('title' in body and 'recipe' in body):
         abort(422)
-    
+
     new_drink = body.get('title')
     new_recipe = body.get('recipe')
 
@@ -90,6 +92,8 @@ def post_drinks(jwt):
 
     except:
         abort(404)
+
+
 '''
 implement endpoint
     PATCH /drinks/<id>
@@ -106,7 +110,7 @@ implement endpoint
 def update_drink(jwt, id):
 
     daDrink = Drink.query.get(id)
-    
+
     if daDrink:
         try:
             body = request.get_json()
@@ -156,23 +160,25 @@ def delete_drink(jwt, id):
                 "success": True,
                 "delete": id
             })
-        
+
         except:
             abort(422)
     else:
         abort(404)
 
-## Error Handling
+
+# Error Handling
 '''
 Example error handling for unprocessable entity
 '''
 @app.errorhandler(422)
 def unprocessable(error):
     return jsonify({
-                    "success": False, 
-                    "error": 422,
-                    "message": "unprocessable"
-                    }), 422
+        "success": False,
+        "error": 422,
+        "message": "unprocessable"
+    }), 422
+
 
 '''
 implement error handlers using the @app.errorhandler(error) decorator
@@ -192,10 +198,11 @@ implement error handler for 404
 @app.errorhandler(404)
 def not_found(error):
     return jsonify({
-                    "success": False, 
-                    "error": 404,
-                    "message": "resource not found"
-                    }), 404
+        "success": False,
+        "error": 404,
+        "message": "resource not found"
+    }), 404
+
 
 '''
 implement error handler for AuthError
@@ -204,7 +211,7 @@ implement error handler for AuthError
 @app.errorhandler(AuthError)
 def handle_auth_error(ex):
     return jsonify({
-                    "success": False,
-                    "error": ex.status_code,
-                    'message': ex.error
-                    }), 401
+        "success": False,
+        "error": ex.status_code,
+        'message': ex.error
+    }), 401
