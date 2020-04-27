@@ -77,7 +77,7 @@ def check_permissions(permission, payload):
             'description': 'Permissions expected in payload'
         }, 400)
     
-    if permission not in payload['permission']:
+    if permission not in payload['permissions']:
         raise AuthError({
             'code': 'not_authorized',
             'description': 'Permission not found'
@@ -98,7 +98,6 @@ implement verify_decode_jwt(token) method
     !!NOTE urlopen has a common certificate error described here: https://stackoverflow.com/questions/50236117/scraping-ssl-certificate-verify-failed-error-for-http-en-wikipedia-org
 '''
 def verify_decode_jwt(token):
-    token = get_token_auth_header()
     jsonurl = urlopen("https://"+AUTH0_DOMAIN+"/.well-known/jwks.json")
     jwks = json.loads(jsonurl.read())
     unverified_header = jwt.get_unverified_header(token)
@@ -121,7 +120,6 @@ def verify_decode_jwt(token):
                 audience=API_AUDIENCE,
                 issuer="https://"+AUTH0_DOMAIN+"/"
             )
-
             return payload
         except jwt.ExpiredSignatureError:
             raise AuthError({"code": "token_expired",
@@ -159,9 +157,9 @@ def requires_auth(permission=''):
             try:
                 payload = verify_decode_jwt(token)
             except:
-                raise AuthError({"code": "invalid_token",
-                        "description":
-                            "Invalid Token"}, 401)
+                raise AuthError({
+                                "code": "invalid_token",
+                                "description": "Invalid Token"}, 401)
             check_permissions(permission, payload)
             return f(payload, *args, **kwargs)
 

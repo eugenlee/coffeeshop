@@ -114,8 +114,10 @@ def update_drink(jwt, id):
             title = body.get('title')
             recipe = body.get('recipe')
 
-            daDrink.title = title
-            daDrink.recipe = recipe
+            if title:
+                daDrink.title = title
+            if recipe:
+                daDrink.recipe = recipe
 
             daDrink.update()
 
@@ -194,8 +196,6 @@ def not_found(error):
                     "error": 404,
                     "message": "resource not found"
                     }), 404
-
-
 
 '''
 implement error handler for AuthError
